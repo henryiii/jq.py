@@ -60,6 +60,10 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macos-10.15]
         python-version: [3.7]
+        linux-arch: [auto]
+        include:
+          - os: ubuntu-20.04
+            linux-arch: aarch64
 
     steps:
 
@@ -79,7 +83,7 @@ jobs:
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.3.1
       env:
-        CIBW_ARCHS_LINUX: auto aarch64
+        CIBW_ARCHS_LINUX: ${{ matrix.linux-arch }}
         CIBW_BEFORE_BUILD: "pip install cython==0.29.24 && cython {project}/jq.pyx"
         CIBW_TEST_REQUIRES: "-r test-requirements.txt"
         CIBW_TEST_COMMAND: "py.test {project}/tests"
